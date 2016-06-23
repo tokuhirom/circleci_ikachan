@@ -88,7 +88,7 @@ func main() {
 		resp, err := http.PostForm(*baseUrl+"/"+message_type,
 			url.Values{"channel": {channel}, "message": {message}})
 		if err != nil {
-			log.Print("Cannot send message to %s: %v", channel, err)
+			log.Printf("Cannot send message to %s: %v", channel, err)
 			fmt.Fprintf(w, "Cannot send message to %s: %v\n", channel, err)
 			return
 		}
