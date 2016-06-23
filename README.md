@@ -8,6 +8,14 @@ This is a forwarder from circleci webhook to ikachan
 
      ./circleci_ikachan -ikachan http://localhost:5000
 
+## Configuration
+
+You need to add following configuration in your circle.yml.
+
+    notify:
+      webhooks:
+        - url: https://example.com/?channel=YOUR_CHANNEL_NAME
+
 ## Sending test request
 
     curl -X POST -d @test.json http://localhost:3000\?channel\=%23nekokak\&message_type\=notice
