@@ -60,10 +60,17 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "GET" {
+			log.Print("Got GET request")
+			fmt.Fprintf(w, "This is circleci+ikachan server.\nhttp://%s?channel=YOUR_CHANNEL_NAME\n", r.Host)
+			return
+		}
+
 		decoder := json.NewDecoder(r.Body)
 		var t Request
 		err := decoder.Decode(&t)
 		if err != nil {
+			w.WriteHeader(400)
 			log.Printf("JSON parse error: %v", err)
 			fmt.Fprintf(w, "%v", err)
 			return
@@ -72,6 +79,7 @@ func main() {
 		r.ParseForm()
 		channel := r.FormValue("channel")
 		if channel == "" {
+			w.WriteHeader(400)
 			log.Print("Missing channel")
 			fmt.Fprintf(w, "Missing channel\n")
 			return
@@ -88,6 +96,7 @@ func main() {
 		resp, err := http.PostForm(*baseUrl+"/"+message_type,
 			url.Values{"channel": {channel}, "message": {message}})
 		if err != nil {
+			w.WriteHeader(500)
 			log.Printf("Cannot send message to %s: %v", channel, err)
 			fmt.Fprintf(w, "Cannot send message to %s: %v\n", channel, err)
 			return
